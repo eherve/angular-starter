@@ -1,0 +1,22 @@
+<div class="content" fxLayout="row" fxLayoutAlign="center center">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <h1 i18n="login page welcome message">Welcome</h1>
+      <mat-form-field>
+        <input formControlName="username" type="text" matInput placeholder="Username" autocomplete="username">
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error *ngIf="f.username.hasError('required')" i18n="login username required error">
+            Username is required
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="password" type="password" matInput placeholder="Password" autocomplete="current-password">
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="f.password.hasError('required')" i18n="login password required error">
+            Password is required
+          </mat-error>
+      </mat-form-field>
+      <button [disabled]="loading" mat-raised-button i18n="login sign in button">Sign in</button>
+    </div>
+  </form>
+</div>

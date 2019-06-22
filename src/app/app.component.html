@@ -1,0 +1,23 @@
+<!-- no user connected -->
+<section *ngIf="!currentUser">
+  <router-outlet></router-outlet>
+</section>
+
+<!-- user connected -->
+<section *ngIf="currentUser">
+  <mat-toolbar color="primary" fxLayout="row">
+    <button id="user-menu" mat-button [matMenuTriggerFor]="userMenu" aria-label="user account menu">
+      <span>{{currentUser?.fullname}}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon color="accent">exit_to_app</mat-icon>
+        <span i18n="sign out user account menu button">Sign out</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+  <div id="router-content">
+    <router-outlet></router-outlet>
+  </div>
+</section>
