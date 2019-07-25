@@ -1,16 +1,37 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { AuthService } from './_services/auth.service';
+import { CustomIconService } from './_services/custom-icon.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        HttpClientModule,
+        RouterTestingModule,
+        FlexLayoutModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule
       ],
       declarations: [
         AppComponent
       ],
+      providers: [
+        AuthService,
+        CustomIconService
+      ]
     }).compileComponents();
   }));
 
@@ -20,16 +41,4 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  // it(`should have as title 'angular-starter'`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.debugElement.componentInstance;
-  //   expect(app.title).toEqual('angular-starter');
-  // });
-
-  // it('should render title in a h1 tag', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.querySelector('h1').textContent).toContain('Welcome to angular-starter!');
-  // });
 });
