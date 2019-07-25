@@ -1,11 +1,5 @@
-<!-- no user connected -->
-<section *ngIf="!currentUser">
-  <router-outlet></router-outlet>
-</section>
-
-<!-- user connected -->
-<section *ngIf="currentUser">
-  <mat-toolbar color="primary" fxLayout="row">
+<mat-toolbar *ngIf="currentUser" @down color="primary">
+  <div class="mat-toolbar-container" fxLayout="row">
     <button id="user-menu" mat-button [matMenuTriggerFor]="userMenu" aria-label="user account menu">
       <span>{{currentUser?.fullname}}</span>
       <mat-icon>arrow_drop_down</mat-icon>
@@ -16,8 +10,13 @@
         <span i18n="sign out user account menu button">Sign out</span>
       </button>
     </mat-menu>
-  </mat-toolbar>
-  <div id="router-content">
-    <router-outlet></router-outlet>
   </div>
-</section>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav *ngIf="currentUser" @left #sidenav mode="side" opened fixedInViewport [fixedTopGap]="64" color="primary">
+    Sidenav
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

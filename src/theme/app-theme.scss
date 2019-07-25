@@ -29,3 +29,6 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 @import '_label-theme';
 @include app-label-theme($app-theme);
 
+@import '_sidenav-theme';
+@include app-sidenav-theme($app-theme);
+
