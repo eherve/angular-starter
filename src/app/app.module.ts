@@ -12,9 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
-import { MockBackendInterceptor } from './mock-backend.interceptor';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CustomIconService } from './_services/custom-icon.service';
+import { mockBackendInterceptor } from './_mocks/mock-backend.interceptor';
 
 @NgModule({
   declarations: [
@@ -33,11 +33,7 @@ import { CustomIconService } from './_services/custom-icon.service';
     MatMenuModule,
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: MockBackendInterceptor,
-      multi: true
-    },
+    mockBackendInterceptor,
     CustomIconService
   ],
   bootstrap: [AppComponent]

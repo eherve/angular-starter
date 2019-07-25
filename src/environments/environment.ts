@@ -5,6 +5,7 @@
 export const environment = {
   appName: 'Angular Starter',
   production: false,
+  gga: '',
   apiUrl: ''
 };
 

@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_classes/user';
+import { ModelMapper } from '../_classes/model-mapper';
+import { Serializer } from '../_classes/serializer';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,8 @@ export class AuthService {
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User>(User.fromString(localStorage.getItem(AuthService.CURRENT_USER_STORAGE_KEY)));
+    const data = localStorage.getItem(AuthService.CURRENT_USER_STORAGE_KEY);
+    this.currentUserSubject = new BehaviorSubject<User>(new Serializer(User).deserialize(data));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -27,8 +30,8 @@ export class AuthService {
   public login(username: string, password: string): Observable<User> {
     return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
       .pipe(map(data => {
-        const user = new User(data);
-        localStorage.setItem(AuthService.CURRENT_USER_STORAGE_KEY, user.toString());
+        const user = new ModelMapper(User).map(data);
+        localStorage.setItem(AuthService.CURRENT_USER_STORAGE_KEY, new Serializer(User).serialize(user));
         this.currentUserSubject.next(user);
         return user;
       }));
