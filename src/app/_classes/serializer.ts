@@ -1,23 +1,11 @@
 // tslint:disable: variable-name
 
-export class Serializer<T> {
+export class Serializer {
 
-  constructor(private type: new () => T) { }
-
-  public serialize(source: T): string {
-    const obj = {};
-    for (const key in source) {
-      if (source.hasOwnProperty(key)) {
-        obj[key.toString()] = source[key];
-      }
-    }
-    return JSON.stringify(obj);
-  }
-
-  public deserialize(source: string): T {
+  static deserialize<T>(type: new () => T, source: string): T {
     if (!source) { return null; }
     const data = JSON.parse(source);
-    const target = new this.type();
+    const target = new type();
     Object.keys(data).forEach((key) => {
       const targetKeys = Object.keys(target);
       if (targetKeys.indexOf(key) === -1) {
@@ -26,4 +14,13 @@ export class Serializer<T> {
     });
     return target;
   }
+
+  static serialize(source: any): string {
+    const obj = {};
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) { obj[key.toString()] = source[key]; }
+    }
+    return JSON.stringify(obj);
+  }
+
 }

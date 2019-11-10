@@ -19,7 +19,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const data = localStorage.getItem(AuthService.CURRENT_USER_STORAGE_KEY);
-    this.currentUserSubject = new BehaviorSubject<User>(new Serializer(User).deserialize(data));
+    this.currentUserSubject = new BehaviorSubject<User>(Serializer.deserialize(User, data));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -30,9 +30,8 @@ export class AuthService {
   public login(username: string, password: string): Observable<User> {
     return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
       .pipe(map(data => {
-        const user = new ModelMapper(User).map(data);
-        localStorage.setItem(AuthService.CURRENT_USER_STORAGE_KEY, new Serializer(User).serialize(user));
-        this.currentUserSubject.next(user);
+        const user = new User(data);
+        this.setUser(user);
         return user;
       }));
   }
@@ -40,6 +39,21 @@ export class AuthService {
   public logout() {
     localStorage.removeItem(AuthService.CURRENT_USER_STORAGE_KEY);
     this.currentUserSubject.next(null);
+  }
+
+  public refresh(): Observable<User> {
+    if (!this.currentUserValue) { return; }
+    return this.http.get<any>(`${environment.apiUrl}/users/${this.currentUserValue.id}`)
+      .pipe(map(data => {
+        const user = new User(data);
+        this.setUser(user);
+        return user;
+      }));
+  }
+
+  private setUser(user: User) {
+    localStorage.setItem(AuthService.CURRENT_USER_STORAGE_KEY, Serializer.serialize(user));
+    this.currentUserSubject.next(user);
   }
 
 }

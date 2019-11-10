@@ -1,6 +1,14 @@
 import { propertyMap } from '../_decorators/property-map.decorator';
+import { ModelMapper } from './model-mapper';
 
-export class User {
+export class UserRight extends ModelMapper {
+
+  @propertyMap()
+  public name: string;
+
+}
+
+export class User extends ModelMapper {
 
   @propertyMap()
   public id: string;
@@ -13,6 +21,9 @@ export class User {
 
   @propertyMap()
   public lastname: string;
+
+  @propertyMap({ type: [UserRight] })
+  public rights: UserRight[];
 
   public get fullname() {
     return `${this.firstname} ${this.lastname}`;
