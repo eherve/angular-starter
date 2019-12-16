@@ -1,4 +1,4 @@
-export type Type = 'Moment' | (new (value: any) => any);
+export type Type = 'Moment' | 'Moment.Duration' | (new () => any);
 
 export interface IOptions {
   source?: string;

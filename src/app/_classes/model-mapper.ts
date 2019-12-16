@@ -1,92 +1,125 @@
-// tslint:disable: variable-name
+// tslint:disable: variable-name space-before-function-paren only-arrow-functions
 import { isEqual, cloneDeep, get, merge } from 'lodash';
 import * as moment from 'moment';
 import { IOptions, Type } from '../_decorators/property-map.decorator';
 
-export abstract class ModelMapper {
+export interface IModelMapper {
 
-  private _initials: { [property: string]: any };
+  _initials?: { [property: string]: any };
 
-  constructor(data?: any) { if (data) { this.map(data); } }
+  getPropertySource?(property: string): string | string[];
 
-  private get _propertyMapping(): { [key: string]: IOptions } {
-    return (this.constructor as any)._propertyMap;
-  }
+  isPropertyDirty?(property: string): boolean;
 
-  public getPropertySource(property: string): string | string[] {
-    const mapping = this._propertyMapping[property];
-    return mapping ? mapping.source : null;
-  }
+  getDirtyProperties?(): string[];
 
-  public isPropertyDirty(property: string): boolean {
-    const mapping = this._propertyMapping[property];
-    if (!mapping || !mapping.trace) { return null; }
-    return this[property].equals ? this[property].equals(this._initials[property]) :
-      !isEqual(this[property], this._initials[property]);
-  }
+  resetDirty?(): this;
 
-  public getDirtyProperties(): string[] {
-    const properties: string[] = [];
-    for (const property in this._propertyMapping) {
-      if (this._propertyMapping.hasOwnProperty(property)) {
-        if (this.isPropertyDirty(property)) { properties.push(property); }
+  merge?(source: any, resetDirty?: boolean): this;
+
+}
+
+export class ModelMapper<T> {
+
+  private _target: any;
+  private _propertyMapping: { [key: string]: IOptions };
+
+  constructor(type: new () => T) {
+    this._target = new type();
+    this._propertyMapping = this._target.constructor._propertyMap || {};
+    const self = this;
+
+    this._target.getPropertySource = function (property: string): string | string[] {
+      const mapping = self._propertyMapping[property];
+      return mapping ? mapping.source : null;
+    };
+
+    this._target.isPropertyDirty = function (property: string): boolean {
+      const mapping = self._propertyMapping[property];
+      if (!mapping || !mapping.trace) { return null; }
+      return this[property].equals ? this[property].equals(this._initials[property]) :
+        !isEqual(this[property], this._initials[property]);
+    };
+
+    this._target.getDirtyProperties = function (): string[] {
+      const properties: string[] = [];
+      for (const property in self._propertyMapping) {
+        if (self._propertyMapping.hasOwnProperty(property)) {
+          if (this.isPropertyDirty(property)) { properties.push(property); }
+        }
       }
-    }
-    return properties;
+      return properties;
+    };
+
+    this._target.resetDirty = function (): T {
+      Object.keys(self._propertyMapping).forEach(key => {
+        const mapping = self._propertyMapping[key];
+        if (mapping.trace) {
+          this._initials[key] = this[key].clone ? this[key].clone() : cloneDeep(this[key]);
+        }
+      });
+      return this;
+    };
+
+    this._target.merge = function (source: any, resetDirty = false): T {
+      merge(this, source);
+      if (resetDirty) { this.resetDirty(); }
+      return this;
+    };
   }
 
-  public resetDirty() {
-    Object.keys(this._propertyMapping).forEach(key => {
-      const mapping = this._propertyMapping[key];
-      if (mapping.trace) {
-        this._initials[key] = this[key].clone ? this[key].clone() : cloneDeep(this[key]);
-      }
-    });
-  };
-
-  public merge(source: any, resetDirty = false): this {
-    merge(this, source);
-    if (resetDirty) { this.resetDirty(); }
-    return this;
-  }
-
-  public map(source): this {
+  public map(source?: any): T {
     if (!source) { return; }
+
     Object.keys(this._propertyMapping).forEach(property => {
       const mapping = this._propertyMapping[property];
 
       if (Array.isArray(mapping.type)) {
-        this[property] = (get(source, mapping.source) || []).
-          map(value => this.getValue(source, property, mapping, mapping.type[0], value));
+        this._target[property] = (get(source, mapping.source) || []).
+          map((value: any) => this.getValue(source, property, mapping, mapping.type[0], value));
       } else {
-        const value = mapping.source ? (mapping.source === '.' ? source : get(source, mapping.source)) : undefined;
-        this[property] = this.getValue(source, property, mapping, mapping.type, value);
+        const value = mapping.source ?
+          (mapping.source === '.' ? source : get(source, mapping.source)) :
+          undefined;
+        this._target[property] = this.getValue(source, property, mapping, mapping.type, value);
       }
 
-      if (mapping.default !== undefined && this[property] === undefined) {
-        this[property] = mapping.default;
+      if (mapping.default !== undefined && this._target[property] === undefined) {
+        this._target[property] = mapping.default;
       }
 
       if (mapping.trace) {
-        this._initials = this._initials || {};
-        this._initials[property] = this[property].clone ? this[property].clone() : cloneDeep(this[property]);
+        this._target._initials = this._target._initials || {};
+        this._target._initials[property] = this._target[property] && this._target[property].clone ?
+          this._target[property].clone() :
+          cloneDeep(this[property]);
       }
     });
-    return this;
+
+    if (typeof this._target.afterMapping === 'function') { this._target.afterMapping(); }
+
+    return this._target;
   }
 
-  protected getValue(source: any, property: string, mapping: IOptions, type: Type, value: any) {
+  private getValue(source: any, property: string, mapping: IOptions, type: Type, value: any) {
     if (type === 'Moment') {
       return this.buildMoment(source, property, mapping, value);
     }
+    if (type === 'Moment.Duration') {
+      return this.buildMomentDuration(source, property, mapping, value);
+    }
     if (type) {
-      return new type(source === '.' ? source : value);
+      return new ModelMapper(type).map(mapping.source === '.' ? source : value);
     }
     return value;
   }
 
-  protected buildMoment(source: any, property: string, mapping: IOptions, value: any): moment.Moment {
-    return value ? moment(value) : undefined;
+  private buildMoment(source: any, property: string, mapping: IOptions, value: any): moment.Moment {
+    return value ? moment.isMoment(value) ? value : moment(value) : undefined;
+  }
+
+  private buildMomentDuration(source: any, property: string, mapping: IOptions, value: any): moment.Duration {
+    return value ? moment.isDuration(value) ? value : moment.duration(value) : undefined;
   }
 
 }
