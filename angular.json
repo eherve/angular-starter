@@ -4,6 +4,14 @@
   "newProjectRoot": "projects",
   "projects": {
     "angular-starter": {
+      "i18n": {
+        "locales": {
+          "fr": {
+            "translation": "src/locale/messages.fr.xlf",
+            "baseHref": ""
+          }
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -22,7 +30,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -46,7 +54,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -55,20 +62,21 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             },
             "fr": {
-              "aot": true,
               "outputPath": "dist/angular-starter-fr/",
               "i18nFile": "src/locale/messages.fr.xlf",
-              "i18nFormat": "xlf",
               "i18nLocale": "fr"
             },
             "fr-production": {
               "outputPath": "dist/angular-starter-fr/",
               "i18nFile": "src/locale/messages.fr.xlf",
-              "i18nFormat": "xlf",
               "i18nLocale": "fr",
               "fileReplacements": [
                 {
@@ -81,7 +89,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -90,6 +97,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
