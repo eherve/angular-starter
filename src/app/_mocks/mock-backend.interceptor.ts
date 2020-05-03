@@ -6,7 +6,7 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { authenticate as login, getUser, me, logout } from './user';
 
 @Injectable()
-class MockBackendInterceptor implements HttpInterceptor {
+export class MockBackendInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const { url, method, headers, body } = request;
