@@ -1,25 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LoginComponent } from './login.component';
+import { LoginPage } from './login.page';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
+import { LoginPageRoutingModule } from './login-routing.module';
+import { SafePipeModule } from '../_pipes/safe-pipe/safe-pipe.module';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginPage],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule.forChild([
-      { path: 'login', component: LoginComponent }
-    ]),
+    LoginPageRoutingModule,
+    TranslateModule.forChild(),
     FlexLayoutModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    SafePipeModule
   ]
 })
-export class AuthModule { }
+export class LoginModule { }

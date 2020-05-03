@@ -1,14 +1,13 @@
-import { propertyMap } from '../_decorators/property-map.decorator';
-import { ModelMapper } from './model-mapper';
+import { propertyMap } from 'model-mapper';
 
-export class UserRight extends ModelMapper {
+export class UserRight {
 
   @propertyMap()
   public name: string;
 
 }
 
-export class User extends ModelMapper {
+export class User {
 
   @propertyMap()
   public id: string;

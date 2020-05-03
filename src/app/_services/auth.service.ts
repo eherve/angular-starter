@@ -1,59 +1,52 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { User } from '../_classes/user';
-import { ModelMapper } from '../_classes/model-mapper';
-import { Serializer } from '../_classes/serializer';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  static CURRENT_USER_STORAGE_KEY = `${environment.appName}.current-user`;
+  static AUTH_KEY = 'AUTH';
+  public $authToken = new BehaviorSubject(null);
 
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
-
-  constructor(private http: HttpClient) {
-    const data = localStorage.getItem(AuthService.CURRENT_USER_STORAGE_KEY);
-    this.currentUserSubject = new BehaviorSubject<User>(Serializer.deserialize(User, data));
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService,
+    private userService: UserService
+  ) {
+    this.init();
   }
 
-  public get currentUserValue() {
-    return this.currentUserSubject.value;
+  public async login(username: string, password: string): Promise<boolean> {
+    const res = await this.http.post<{ access_token: string }>(`${environment.apiUrl}/auth/login`, { username, password }).toPromise();
+    await this.storageService.set(AuthService.AUTH_KEY, res.access_token);
+    this.$authToken.next(res.access_token);
+    return true;
   }
 
-  public login(username: string, password: string): Observable<User> {
-    return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
-      .pipe(map(data => {
-        const user = new User(data);
-        this.setUser(user);
-        return user;
-      }));
+  public async logout() {
+
+    // not needed in REST app but if you need to clean session stuff in server
+    this.http.post<{ access_token: string }>(`${environment.apiUrl}/auth/logout`, {}).toPromise();
+
+    await this.storageService.remove(AuthService.AUTH_KEY);
+    this.$authToken.next(null);
+    await this.userService.clearUser();
   }
 
-  public logout() {
-    localStorage.removeItem(AuthService.CURRENT_USER_STORAGE_KEY);
-    this.currentUserSubject.next(null);
+  public async isAuthenticated(): Promise<boolean> {
+    const authToken = await this.storageService.get(AuthService.AUTH_KEY);
+    if (authToken !== this.$authToken.value) { this.$authToken.next(authToken); }
+    return !!authToken;
   }
 
-  public refresh(): Observable<User> {
-    if (!this.currentUserValue) { return; }
-    return this.http.get<any>(`${environment.apiUrl}/users/${this.currentUserValue.id}`)
-      .pipe(map(data => {
-        const user = new User(data);
-        this.setUser(user);
-        return user;
-      }));
-  }
-
-  private setUser(user: User) {
-    localStorage.setItem(AuthService.CURRENT_USER_STORAGE_KEY, Serializer.serialize(user));
-    this.currentUserSubject.next(user);
+  private async init() {
+    const data = await this.storageService.get(AuthService.AUTH_KEY);
+    this.$authToken.next(data);
   }
 
 }

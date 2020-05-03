@@ -11,9 +11,16 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CustomIconService } from './_services/custom-icon.service';
 import { mockBackendInterceptor } from './_mocks/mock-backend.interceptor';
+import { AuthInterceptor } from './_interceptors/auth.interceptor';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -22,6 +29,14 @@ import { mockBackendInterceptor } from './_mocks/mock-backend.interceptor';
   imports: [
     BrowserModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'fr',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
     AppRoutingModule,
     FlexLayoutModule,
     BrowserAnimationsModule,
@@ -33,6 +48,7 @@ import { mockBackendInterceptor } from './_mocks/mock-backend.interceptor';
   ],
   providers: [
     mockBackendInterceptor,
+    AuthInterceptor,
     CustomIconService
   ],
   bootstrap: [AppComponent]

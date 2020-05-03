@@ -2,10 +2,10 @@ import { Component} from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss']
 })
-export class HomeComponent {
+export class HomePage {
 
 public appName = environment.appName;
 
