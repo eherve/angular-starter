@@ -19,6 +19,19 @@ export class MockBackendInterceptor implements HttpInterceptor {
 
     function handleRoute() {
       console.debug('MockBackendInterceptor::handleRoute', { url, body });
+      if (url.endsWith('/pages') && method === 'GET') {
+        return of(new HttpResponse({
+          status: 200,
+          body: [
+            { _id: 'profile', title: 'Profil', url: '/profile' },
+            {
+              _id: 'page-1', title: 'Page 1', url: '/page-1', subpages: [
+                { _id: 'page-1.1', title: 'Page 1.1', url: '/page-1.1' }
+              ]
+            },
+          ]
+        }));
+      }
       if (url.endsWith('/auth/login') && method === 'POST') {
         return login(body.username, body.password);
       }

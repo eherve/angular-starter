@@ -7,6 +7,8 @@ import { User } from 'src/app/_classes/user';
 import { Subscription } from 'rxjs';
 import { Notification } from '../notification/notification';
 import { filter, tap } from 'rxjs/operators';
+import { PageService } from 'src/app/_services/page.service';
+import { Page } from 'src/app/_classes/page';
 
 export interface ILink {
   title: string;
@@ -34,22 +36,23 @@ export interface ILink {
 export class ToolbarComponent implements OnInit, OnDestroy {
 
   public user: User;
-  public links: ILink[] = [
-    { title: 'home', url: '/home' },
-    { title: 'profile', url: '/profile' }
-  ];
+  public pages: Page[] = [];
   public activeLink: ILink;
   private userSubscription: Subscription;
   private routeSubscription: Subscription;
 
   constructor(
     private router: Router,
+    private pageService: PageService,
     private authService: AuthService,
     private userService: UserService,
     private notification: Notification
   ) { }
 
   ngOnInit(): void {
+    this.pageService.$pages
+      .pipe(tap(pages => console.log('pages:', pages)))
+      .subscribe(pages => this.pages = pages);
     this.setUser(this.userService.$user.value);
     this.userSubscription = this.userService.$user.subscribe(user => this.setUser(user));
     this.routeSubscription = this.router.events.pipe(
@@ -76,7 +79,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   private setActiveLink(event: NavigationEnd) {
-    this.activeLink = this.links.find(l => event.urlAfterRedirects.replace(/([^?]+)(\?.*)?/, '$1').startsWith(l.url));
+    this.activeLink = this.pages.find(l => event.urlAfterRedirects.replace(/([^?]+)(\?.*)?/, '$1').startsWith(l.url));
   }
 
 }

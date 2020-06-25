@@ -2,9 +2,9 @@
   <div id="logo">
 
   </div>
-  <div id="links" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-    <a class="link" mat-button *ngFor="let link of links" [class.active]="activeLink === link" [routerLink]="link.url">
-      <mat-label translate>{{link.title}}</mat-label>
+  <div id="pages" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <a class="page" mat-button *ngFor="let page of pages" [class.active]="activePage === page" [routerLink]="page.url">
+      <mat-label translate>{{page.title}}</mat-label>
     </a>
   </div>
   <div id="user-menu">

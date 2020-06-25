@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
   },
+  {
+    path: ':page',
+    loadChildren: () => import('./page/page.module').then(m => m.PageModule)
+  },
   { path: '**', redirectTo: 'home' }
 ];
 

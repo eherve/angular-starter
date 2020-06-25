@@ -2,10 +2,10 @@ mat-toolbar.mat-toolbar {
   padding-left: 0;
 }
 
-#links {
+#pages {
   padding-left: 16px;
 
-  .link {
+  .page {
     &.active {
       color: var(--color-accent);
     }
