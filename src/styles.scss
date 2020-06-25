@@ -3,3 +3,16 @@
 body {
   margin: 0;
 }
+
+
+[bold] {
+  font-weight: 600;
+}
+
+[lowercase] {
+  text-transform: lowercase;
+}
+
+[uppercase] {
+  text-transform: uppercase;
+}

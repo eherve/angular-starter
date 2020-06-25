@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { authenticate as login, getUser, me, logout } from './user';
+import { authenticate as login, getUser, me, logout } from './user.mock';
 
 @Injectable()
 export class MockBackendInterceptor implements HttpInterceptor {

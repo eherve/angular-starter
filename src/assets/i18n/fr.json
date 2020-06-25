@@ -1,1 +1,13 @@
-{}
+{
+	"sign-out": "Déconnexion",
+	"welcome": "Bienvenue",
+	"username": "Nom d'utilisateur",
+	"required-username": "Nom d'utilisateur obligatoire",
+	"password": "Mot de passe",
+	"required-password": "Mot de passe obligatoire",
+	"sign-in": "Connexion",
+	"http-error_unauthorized": "Non authorisé",
+  "http-error_unknown": "Erreur inconnue",
+  "notification_authentificated-as": "{username} connecté",
+  "notification_disconnected": "{username} déconnecté"
+}

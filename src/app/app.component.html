@@ -1,22 +1,2 @@
-<mat-toolbar *ngIf="user" @down color="primary">
-  <div class="mat-toolbar-container" fxLayout="row">
-    <button id="user-menu" mat-button [matMenuTriggerFor]="userMenu" aria-label="user account menu">
-      <span>{{user?.fullname}}</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item (click)="logout()">
-        <mat-icon color="accent">exit_to_app</mat-icon>
-        <span translate>sign-out</span>
-      </button>
-    </mat-menu>
-  </div>
-</mat-toolbar>
-<mat-sidenav-container>
-  <mat-sidenav *ngIf="user" @left #sidenav mode="side" opened fixedInViewport [fixedTopGap]="64" color="primary">
-    Sidenav
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<app-toolbar></app-toolbar>
+<router-outlet></router-outlet>

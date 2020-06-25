@@ -23,12 +23,8 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 // that you are using.
 @include angular-material-theme($app-theme);
 
-@import '_header-theme';
-@include app-header-theme($app-theme);
+$custom-typography: mat-typography-config($font-family: 'Roboto, monospace');
+@include mat-base-typography($custom-typography);
 
-@import '_label-theme';
-@include app-label-theme($app-theme);
-
-@import '_sidenav-theme';
-@include app-sidenav-theme($app-theme);
-
+@import '_colors-theme';
+@include app-colors-theme($app-theme);

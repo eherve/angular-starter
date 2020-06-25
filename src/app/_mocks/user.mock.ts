@@ -13,7 +13,9 @@ const users = [
 export function authenticate(username: string, password: string): Observable<any> {
   const user = users.find(x => x.username === username && x.password === password);
   if (!user) {
-    return throwError({ error: { message: 'Username or password is incorrect' } });
+    return throwError(new HttpErrorResponse({
+      status: 401, statusText: 'Unauthorized', error: 'Username or password is incorrect'
+    }));
   }
   localStorage.setItem(`${environment.appName}.MOCK.ME`, user.id);
   return of(new HttpResponse({

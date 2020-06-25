@@ -1,0 +1,17 @@
+mat-toolbar.mat-toolbar {
+  padding-left: 0;
+}
+
+#links {
+  padding-left: 16px;
+
+  .link {
+    &.active {
+      color: var(--color-accent);
+    }
+  }
+}
+
+#user-menu {
+  margin-left: auto;
+}

@@ -8,7 +8,7 @@
   background-position-y: 0%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url(https://picsum.photos/1920/1024);
+  background-image: url(https://picsum.photos/1920/1024?random=1);
 
   &:before {
     content: '';
@@ -19,22 +19,35 @@
     background-size: auto;
     background-repeat: no-repeat;
     background-image: url(/assets/images/logo.svg);
-    opacity: 0.4;
   }
 
   form {
     z-index: 10;
-  }
-
-  h1 {
-    color: white;
+    max-width: 100%;
   }
 
   mat-form-field {
     width: 500px;
-    background-color: white;
+    max-width: calc(100% - 16px);
+    box-sizing: border-box;
+    background-color: transparent;
     padding: 4px 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
     border-radius: 10px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: white;
+      opacity: 0.8;
+      border-radius: 9px;
+    }
 
     &:not(:first-child) {
       margin-top: 20px;
@@ -42,8 +55,34 @@
   }
 
   button {
+    position: relative;
     margin-top: 20px;
     width: 520px;
+    max-width: calc(100% - 16px);
+    box-sizing: border-box;
     font-size: 24px;
+    background-color: transparent;
+    border-radius: 10px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: white;
+      opacity: 0.8;
+      border-radius: 9px;
+    }
+
+    &>div {
+      position: relative;
+    }
   }
+}
+
+.error {
+  position: absolute;
+  top: 0;
 }

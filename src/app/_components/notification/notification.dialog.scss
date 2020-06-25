@@ -1,0 +1,56 @@
+.dialog-notification {
+
+  &.notification-ready {
+    transition: margin 0.2s ease;
+  }
+
+  mat-dialog-container.mat-dialog-container {
+    padding: 0;
+  }
+}
+
+.notification-container {
+  padding: 14px 16px;
+
+  &.info {
+    color: rgba(255, 255, 255, 0.7);
+    background: #323232;
+  }
+
+  &.warning {
+    color: rgba(255, 255, 255, 0.7);
+    background: var(--color-accent);
+  }
+
+  &.error {
+    color: rgba(255, 255, 255, 0.7);
+    background: var(--color-warn);
+  }
+
+  .notification-msg {
+    margin: 0;
+    line-height: 20px;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    ;
+  }
+
+  .notification-close-btn {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+
+
+    .mat-button-wrapper {
+      display: flex;
+
+      mat-icon.mat-icon {
+        height: 20px;
+        width: 20px;
+        line-height: 20px;
+      }
+    }
+  }
+
+}

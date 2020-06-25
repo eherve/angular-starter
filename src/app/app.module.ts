@@ -6,17 +6,22 @@ import { AppComponent } from './app.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatToolbarModule, MatToolbar } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateCompiler } from '@ngx-translate/core';
+import { TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CustomIconService } from './_services/custom-icon.service';
 import { mockBackendInterceptor } from './_mocks/mock-backend.interceptor';
 import { AuthInterceptor } from './_interceptors/auth.interceptor';
+import { ToolbarModule } from './_components/toolbar/toolbar.module';
+
+const locales = ['fr'];
+const defaultLanguage = 'fr';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -30,23 +35,30 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'fr',
+      defaultLanguage,
       loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler
       }
     }),
     AppRoutingModule,
     FlexLayoutModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
+    ToolbarModule,
+    // MatToolbarModule,
     MatSidenavModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
+    // MatButtonModule,
+    // MatIconModule,
+    // MatMenuModule,
+    ToolbarModule
   ],
   providers: [
+    { provide: MESSAGE_FORMAT_CONFIG, useValue: { locales } },
     mockBackendInterceptor,
     AuthInterceptor,
     CustomIconService

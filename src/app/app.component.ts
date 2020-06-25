@@ -72,14 +72,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private async init() {
     this.customIconService.init();
-    this.translate.setDefaultLang('fr');
-    this.translate.use('fr');
-    moment.locale('fr');
+    moment.locale(this.translate.getDefaultLang());
     this.loadUser();
   }
 
   private async setUser(user: User) {
-    console.log('setUser', user);
     this.user = user;
   }
 

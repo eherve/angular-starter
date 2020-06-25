@@ -1,0 +1,22 @@
+<mat-toolbar *ngIf="user" @down>
+  <div id="logo">
+
+  </div>
+  <div id="links" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <a class="link" mat-button *ngFor="let link of links" [class.active]="activeLink === link" [routerLink]="link.url">
+      <mat-label translate>{{link.title}}</mat-label>
+    </a>
+  </div>
+  <div id="user-menu">
+    <button mat-button [matMenuTriggerFor]="userMenu" aria-label="user account menu">
+      <span>{{user?.fullname}}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon color="accent">exit_to_app</mat-icon>
+        <span translate>sign-out</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
