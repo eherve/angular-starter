@@ -1,0 +1,14 @@
+<div class="container">
+  <h2 #title mat-dialog-title>
+    <ng-content select="[dialogTitle]"></ng-content>
+  </h2>
+  <button class="close-btn" mat-icon-button mat-dialog-close [class.edge]="edge">
+    <mat-icon>cancel_outline</mat-icon>
+  </button>
+  <div mat-dialog-content [style.max-height]="contentMaxHeight">
+    <ng-content select="[dialogContent]"></ng-content>
+  </div>
+  <mat-dialog-actions #actions align="end">
+    <ng-content select="[dialogActions]"></ng-content>
+  </mat-dialog-actions>
+</div>

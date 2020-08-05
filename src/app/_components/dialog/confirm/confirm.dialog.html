@@ -1,0 +1,13 @@
+<app-dialog-layout>
+  <span *ngIf="data.title" dialogTitle [translateParams]="data.titleParams" translate>{{data.title}}</span>
+  <div dialogContent [innerHTML]="data.message | translate:data.messageParams | safe:'html'" [style.min-width.px]="300">
+  </div>
+  <ng-container dialogActions>
+    <button mat-button color="accent" [mat-dialog-close]="false">
+      <span translate>cancel</span>
+    </button>
+    <button mat-button color="primary" [mat-dialog-close]="true">
+      <span translate>validate</span>
+    </button>
+  </ng-container>
+</app-dialog-layout>

@@ -50,11 +50,7 @@ export function createTranslateLoader(http: HttpClient) {
     FlexLayoutModule,
     BrowserAnimationsModule,
     ToolbarModule,
-    // MatToolbarModule,
     MatSidenavModule,
-    // MatButtonModule,
-    // MatIconModule,
-    // MatMenuModule,
     ToolbarModule
   ],
   providers: [
