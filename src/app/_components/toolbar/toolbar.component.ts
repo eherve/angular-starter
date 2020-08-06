@@ -7,12 +7,9 @@ import { User } from 'src/app/_classes/user';
 import { Subscription } from 'rxjs';
 import { Notification } from '../notification/notification';
 import { filter, tap } from 'rxjs/operators';
-import { PageService } from 'src/app/_services/page.service';
-import { Page } from 'src/app/_classes/page';
 
-export interface ILink {
+export interface IPage {
   title: string;
-  icon?: string;
   url: string;
 }
 
@@ -36,28 +33,27 @@ export interface ILink {
 export class ToolbarComponent implements OnInit, OnDestroy {
 
   public user: User;
-  public pages: Page[] = [];
-  public activeLink: ILink;
+  public pages: IPage[] = [
+    { title: 'home', url: 'home' },
+    { title: 'profile', url: 'profile' }
+  ];
+  public activePage: IPage;
   private userSubscription: Subscription;
   private routeSubscription: Subscription;
 
   constructor(
     private router: Router,
-    private pageService: PageService,
     private authService: AuthService,
     private userService: UserService,
     private notification: Notification
   ) { }
 
   ngOnInit(): void {
-    this.pageService.$pages
-      .pipe(tap(pages => console.log('pages:', pages)))
-      .subscribe(pages => this.pages = pages);
     this.setUser(this.userService.$user.value);
     this.userSubscription = this.userService.$user.subscribe(user => this.setUser(user));
     this.routeSubscription = this.router.events.pipe(
       filter((event: any) => event instanceof NavigationEnd),
-      tap((event: NavigationEnd) => this.setActiveLink(event))
+      tap((event: NavigationEnd) => this.setActiveLink(event.urlAfterRedirects))
     ).subscribe();
   }
 
@@ -68,7 +64,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
     this.notification.show('info',
       { key: `notification_disconnected`, data: { username: this.user.username } },
       { duration: 500, hasToolbar: false });
@@ -78,8 +74,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.user = user;
   }
 
-  private setActiveLink(event: NavigationEnd) {
-    this.activeLink = this.pages.find(l => event.urlAfterRedirects.replace(/([^?]+)(\?.*)?/, '$1').startsWith(l.url));
+  private setActiveLink(url: string) {
+    if (!this.pages) { return; }
+    const matchUrl = url.replace(/^\/([^\/\?]+).*/, '$1');
+    this.activePage = this.pages.find(p => matchUrl === p.url);
   }
 
 }
