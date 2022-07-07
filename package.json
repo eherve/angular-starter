@@ -30,7 +30,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "messageformat": "^2.3.0",
     "model-mapper": "git+https://github.com/eherve/model-mapper.git",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "ngx-translate-messageformat-compiler": "^4.8.0",
     "rxjs": "~6.5.5",
     "safe-pipe": "^1.0.3",
